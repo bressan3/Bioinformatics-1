@@ -86,3 +86,8 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     bestWinSize = lowWinSize + wholesum.index(max(wholesum))
     print(bestWinSize)
     return bestWinSize
+
+
+def gatherContributions(aminoSeqList):
+    
+    print("df");
