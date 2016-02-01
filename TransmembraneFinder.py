@@ -63,20 +63,26 @@ def mostHydrophobicRegion(aaSeq, winSize):
     return {'mostHydReg': mostHydReg, 'score': aaSeqHydReg}
 
 
-def bestWindowSize(listOfAASeqs,lowWinSize,highWinSize):
-    
-    index=0
-    wholesum= [0 for x in range(highWinSize-lowWinSize+1)]
-    while index<=(highWinSize-lowWinSize):
-        tempsum=0
+def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
+    """Takes in a list of amino acid sequences and two numbers representing low and high values for
+     possible window sizes. Returns the window size which has the highest total hydrophibcity across
+      all of the amino acid sequences
+    Args:
+        listOfAASeqs (string): List of amino acid sequences
+        lowWinSize (int): low value for possible window size
+        highWinSize (int): low value for possible window size
+    Returns:
+        int: window size
+    """
+    index = 0
+    wholesum = [0 for x in range(highWinSize-lowWinSize+1)]
+    while index <= (highWinSize-lowWinSize):
+        tempsum = 0
         for i in listOfAASeqs:
-            hydrophobicityInfo=mostHydrophobicRegion(i,lowWinSize+index)    
-            tempsum=tempsum+hydrophobicityInfo['score']
-        wholesum[index]=tempsum
-        index=index+1
-    bestWinSize =lowWinSize+wholesum.index(max(wholesum))
+            hydrophobicityInfo = mostHydrophobicRegion(i, lowWinSize + index)
+            tempsum = tempsum + hydrophobicityInfo['score']
+        wholesum[index] = tempsum
+        index = index+1
+    bestWinSize = lowWinSize + wholesum.index(max(wholesum))
     print(bestWinSize)
     return bestWinSize
-    
-x=['RKDNE', 'RKDNE', 'RKDNE']
-bestWindowSize(x, 2, 4)

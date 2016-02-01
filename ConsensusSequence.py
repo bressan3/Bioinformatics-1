@@ -7,14 +7,9 @@ import HelperFunctions
 
 
 def main():
-     nucleicAcidSeqList = TransmembraneFinder.readInput("Group2TMseqs.txt")    
+    nucleicAcidSeqList = TransmembraneFinder.readInput("Group2TMseqs.txt")    
     # print(nucleicAcidSeqList)
-     print(TransmembraneFinder.translate('ATGTTGATTTAATAGTTT'))
-    
-  #  mostHydrophobicRegion('MNQSTKRKHVLIPLPPVSTKRHD',8)
-  #  bestWindowSize(['MNQSTKRKHVLIPLPPVSTKRHD','MNQSTKRKHVLIPLPPVSTKRHD','MNQSTKRKHVLIPLPPVSTKRHD'],6,10)
+    print(TransmembraneFinder.translate('ATGTTGATTTAATAGTTT'))
 
-
-main()
-
-
+    # mostHydrophobicRegion('MNQSTKRKHVLIPLPPVSTKRHD',8)
+    # bestWindowSize(['MNQSTKRKHVLIPLPPVSTKRHD','MNQSTKRKHVLIPLPPVSTKRHD','MNQSTKRKHVLIPLPPVSTKRHD'],6,10)

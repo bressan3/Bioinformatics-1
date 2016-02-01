@@ -21,11 +21,6 @@ def entropy(probList):
     Returns:
         float: Return a number representing the entropy
     """
-    # entropy = 0
-    # for p in probList:
-    # if p > 0:
-    # entropy += p * math.log(p, 2)
-    # return - entropy
     return -[sum(p * math.log(p, 2) for p in probList if p > 0)]
 
 

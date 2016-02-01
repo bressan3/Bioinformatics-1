@@ -1,4 +1,4 @@
-""" Codons Dictionary """
+""" Dictionary """
 
 code = {}
 
@@ -82,14 +82,8 @@ code['GGC'] = 'G'
 code['GGA'] = 'G'
 code['GGG'] = 'G'
 
-
-
-
-
-
-
-hydrophobicityScale={}
-#Using the POPC bilayer interface hydrophobicity scale found on http://blanco.biomol.uci.edu/hydrophobicity_scales.html  
+hydrophobicityScale = {}
+# Using the POPC bilayer interface hydrophobicity scale found on http://blanco.biomol.uci.edu/hydrophobicity_scales.html
 hydrophobicityScale['W'] = -1.85
 hydrophobicityScale['F'] = -1.13
 hydrophobicityScale['Y'] = -0.94
@@ -102,7 +96,7 @@ hydrophobicityScale['V'] = 0.07
 hydrophobicityScale['S'] = 0.13
 hydrophobicityScale['T'] = 0.14
 hydrophobicityScale['A'] = 0.17
-    #H = 0.17
+# H = 0.17
 hydrophobicityScale['N'] = 0.42
 hydrophobicityScale['P'] = 0.45
 hydrophobicityScale['Q'] = 0.58
