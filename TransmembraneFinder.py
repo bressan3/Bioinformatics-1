@@ -3,11 +3,17 @@ Please read: project_1_transmembrane_regions_2016.pdf for more info.
 """
 from codes import *
 
-"""function to reads to contents of the file and output a list containing the nucleic acid sequences """
+
 def readInput(filename):
+    """Function that reads a file's contents outputs a list containing a nucleic acid sequence
+    Args:
+        filename (string): File path
+    Return:
+        string: Sequence read from the file
+    """
     file = [x.strip() for x in open(filename).readlines()]
     return file
-		
+
 
 def translate(dna):
     """Function that takes a DNA string converts it to RNA and then translates and returns its aminoacid sequence
@@ -27,72 +33,31 @@ def translate(dna):
     return aminoAcidsSeq
 
 
-
-hydrophobicityScale={}
-#Using the POPC bilayer interface hydrophobicity scale found on http://blanco.biomol.uci.edu/hydrophobicity_scales.html  
-hydrophobicityScale['W'] = -1.85
-hydrophobicityScale['F'] = -1.13
-hydrophobicityScale['Y'] = -0.94
-hydrophobicityScale['L'] = -0.56
-hydrophobicityScale['I'] = -0.31
-hydrophobicityScale['C'] = -0.24
-hydrophobicityScale['M'] = -0.23
-hydrophobicityScale['G'] = -0.01
-hydrophobicityScale['V'] = 0.07
-hydrophobicityScale['S'] = 0.13
-hydrophobicityScale['T'] = 0.14
-hydrophobicityScale['A'] = 0.17
-    #H = 0.17
-hydrophobicityScale['N'] = 0.42
-hydrophobicityScale['P'] = 0.45
-hydrophobicityScale['Q'] = 0.58
-hydrophobicityScale['H'] = 0.96
-hydrophobicityScale['R'] = 0.81
-hydrophobicityScale['K'] = 0.99
-hydrophobicityScale['D'] = 1.23
-hydrophobicityScale['E'] = 2.02
-    
-    
-def mostHydrophobicRegion(aaSeq,winSize):
-    
-    global hydrophobicityScale    
-    index=0
-    aaSeqHydReg=0
-    mostHydReg=0
-    while index<len(aaSeq):
-        if (len(aaSeq)-index)!=winSize-1:
-            aaSeqwin=aaSeq[index:index+winSize]
+def mostHydrophobicRegion(aaSeq, winSize):
+    """Function that takes a amino acid sequence and a window size and returns the start position of
+    a window which is the most hydrophobic region of the given sequence
+    Args:
+        aaSeq (string): Amino Acid sequence
+        winSize (int): Window size
+    Returns:
+        int: Start location of a window of the given size (Most hidrophobic region of that size)
+    """
+    global hydrophobicityScale
+    index = 0
+    aaSeqHydReg = 0
+    mostHydReg = 0
+    while index < len(aaSeq):
+        if (len(aaSeq) - index) != winSize - 1:
+            aaSeqwin = aaSeq[index:index + winSize]
         else:
             break
-        count=0
-        aaSeqReg=0
-        while count<winSize:
-            aaSeqReg=aaSeqReg+hydrophobicityScale[aaSeqwin[count]]
-            count=count+1 
-        if aaSeqHydReg<aaSeqReg:
-            aaSeqHydReg=aaSeqReg 
-            mostHydReg=index
-        index=index+1
-    return {'mostHydReg':mostHydReg, 'score':aaSeqHydReg}
-    
-
-def bestWindowSize(listOfAASeqs,lowWinSize,highWinSize):
-    
-    index=0
-    wholesum= [0 for x in range(highWinSize-lowWinSize+1)]
-    while index<=(highWinSize-lowWinSize):
-        tempsum=0
-        for i in listOfAASeqs:
-            hydrophobicityInfo=mostHydrophobicRegion(i,lowWinSize+index)    
-            tempsum=tempsum+hydrophobicityInfo['score']
-        wholesum[index]=tempsum
-        index=index+1
-    bestWinSize =lowWinSize+wholesum.index(max(wholesum))
-    print(bestWinSize)
-    return bestWinSize
-    
-x=['RKDNE', 'RKDNE', 'RKDNE']
-bestWindowSize(x, 2, 4)
-    
-    
-    
+        count = 0
+        aaSeqReg = 0
+        while count < winSize:
+            aaSeqReg = aaSeqReg+hydrophobicityScale[aaSeqwin[count]]
+            count = count + 1
+        if aaSeqHydReg < aaSeqReg:
+            aaSeqHydReg = aaSeqReg
+            mostHydReg = index
+        index = index + 1
+    print(mostHydReg)
