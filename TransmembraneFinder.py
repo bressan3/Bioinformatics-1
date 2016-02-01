@@ -73,6 +73,26 @@ def mostHydrophobicRegion(aaSeq,winSize):
             aaSeqHydReg=aaSeqReg 
             mostHydReg=index
         index=index+1
-    print(mostHydReg)
+    return {'mostHydReg':mostHydReg, 'score':aaSeqHydReg}
     
-mostHydrophobicRegion('KDFEEE',3)
+
+def bestWindowSize(listOfAASeqs,lowWinSize,highWinSize):
+    
+    index=0
+    wholesum= [0 for x in range(highWinSize-lowWinSize+1)]
+    while index<=(highWinSize-lowWinSize):
+        tempsum=0
+        for i in listOfAASeqs:
+            hydrophobicityInfo=mostHydrophobicRegion(i,lowWinSize+index)    
+            tempsum=tempsum+hydrophobicityInfo['score']
+        wholesum[index]=tempsum
+        index=index+1
+    bestWinSize =lowWinSize+wholesum.index(max(wholesum))
+    print(bestWinSize)
+    return bestWinSize
+    
+x=['RKDNE', 'RKDNE', 'RKDNE']
+bestWindowSize(x, 2, 4)
+    
+    
+    
