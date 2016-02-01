@@ -5,7 +5,7 @@ import math
 
 
 def gatherCounts(seqList):
-    """Accepts a list of sequences and returns a list of the frequence 
+    """Accepts a list of sequences and returns a list of the frequence
         counts of each amino acids at each position
     Args:
         seqList (char): List of aminoacid sequences

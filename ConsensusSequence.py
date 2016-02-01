@@ -15,10 +15,8 @@ def translate(dna):
     startIndex = dna.find('AUG') + 1
     aminoAcidsSeq = ""
     for i in range(startIndex, len(rna), 3):
-        # codon = rna[i: i+3]
         aminoAcidsSeq += code[rna[i: i+3]]
         if aminoAcidsSeq[len(aminoAcidsSeq) - 1] == '*':
             aminoAcidsSeq = aminoAcidsSeq[:-1]
             break
     return aminoAcidsSeq
-
