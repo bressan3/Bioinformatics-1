@@ -33,7 +33,7 @@ def information(entropy, numBases):
     Returns:
         float: Returns the information
     """
-    return []
+    return [2 - (math.log(numBases, 2) - entropy)]
 
 
 def calcProbs(freqCounts):
