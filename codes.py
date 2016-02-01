@@ -81,3 +81,33 @@ code['GGU'] = 'G'
 code['GGC'] = 'G'
 code['GGA'] = 'G'
 code['GGG'] = 'G'
+
+
+
+
+
+
+
+hydrophobicityScale={}
+#Using the POPC bilayer interface hydrophobicity scale found on http://blanco.biomol.uci.edu/hydrophobicity_scales.html  
+hydrophobicityScale['W'] = -1.85
+hydrophobicityScale['F'] = -1.13
+hydrophobicityScale['Y'] = -0.94
+hydrophobicityScale['L'] = -0.56
+hydrophobicityScale['I'] = -0.31
+hydrophobicityScale['C'] = -0.24
+hydrophobicityScale['M'] = -0.23
+hydrophobicityScale['G'] = -0.01
+hydrophobicityScale['V'] = 0.07
+hydrophobicityScale['S'] = 0.13
+hydrophobicityScale['T'] = 0.14
+hydrophobicityScale['A'] = 0.17
+    #H = 0.17
+hydrophobicityScale['N'] = 0.42
+hydrophobicityScale['P'] = 0.45
+hydrophobicityScale['Q'] = 0.58
+hydrophobicityScale['H'] = 0.96
+hydrophobicityScale['R'] = 0.81
+hydrophobicityScale['K'] = 0.99
+hydrophobicityScale['D'] = 1.23
+hydrophobicityScale['E'] = 2.02
