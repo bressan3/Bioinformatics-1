@@ -89,6 +89,17 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     return bestWinSize
 
 
+def gatherContributions(listOfAASeqs):
+    freqCounts = gatherContributions(listOfAASeqs)
+    probs = calcProbs(freqCounts)
+    entropy = entropy(probs)
+    info = information(entropy, 4)
+    contrDict = []
+    for i in range(0, len(aaSeq)):
+        for j in range(0, len(freqCounts)):
+            contrDict.append(probs[i][j] * info)
+    return contrDict
+
 def gatherContributions(aminoSeqList):
     countsList = HelperFunctions.gatherCounts(aminoSeqList)
         
@@ -117,3 +128,4 @@ def gatherContributions(aminoSeqList):
         index = index+1
         
     return finalDict
+
