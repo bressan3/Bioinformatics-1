@@ -2,6 +2,7 @@
 Please read: project_1_transmembrane_regions_2016.pdf for more info.
 """
 from codes import *
+import HelperFunctions
 
 
 def readInput(filename):
@@ -89,5 +90,30 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
 
 
 def gatherContributions(aminoSeqList):
-    
-    print("df");
+    countsList = HelperFunctions.gatherCounts(aminoSeqList)
+        
+    finalDict = [0 for x in range(len(countsList))]
+    index =0
+    for oneCountList in countsList:
+      #  print("onecount at a time : \n",oneCountList)
+        
+        probabilityPerCount = HelperFunctions.calcProbs(oneCountList)  
+
+        probabilityList = [value for key, value in probabilityPerCount.items()]
+        print("Probability list : \n", probabilityList)
+
+        entropy = HelperFunctions.entropy(probabilityList)
+        print("Entropy = ", entropy)
+        
+
+        info = HelperFunctions.information(entropy, 4)
+        print("Information = ",info)
+
+        for key,value in probabilityPerCount.items():
+            if (probabilityPerCount[key] == value): 
+                probabilityPerCount[key] = value * info
+        
+        finalDict[index] = probabilityPerCount
+        index = index+1
+        
+    return finalDict
