@@ -27,7 +27,7 @@ def gatherCounts(seqList):
     return returnList
     
 
-
+'''
 def gatherCountsDNATest(seqList):
     """Accepts a list of sequences and returns a list of the frequence
         counts of each amino acids at each position
@@ -55,7 +55,7 @@ def gatherCountsDNATest(seqList):
         print("A = ",a," C = ",c," G = ",g,"T = ",t)
         returnList[index] = [a,c,g,t]
     return returnList
-    
+'''    
     
     
 def entropy(probList):

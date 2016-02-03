@@ -47,6 +47,7 @@ def mostHydrophobicRegion(aaSeq, winSize):
     index = 0
     aaSeqHydReg = 0
     mostHydReg = 0
+     
     while index < len(aaSeq):
         if (len(aaSeq) - index) != winSize - 1:
             aaSeqwin = aaSeq[index:index + winSize]
@@ -61,8 +62,30 @@ def mostHydrophobicRegion(aaSeq, winSize):
             aaSeqHydReg = aaSeqReg
             mostHydReg = index
         index = index + 1
+   
+       
     return {'mostHydReg': mostHydReg, 'score': aaSeqHydReg}
+    
 
+'''
+def mostHydrophobicRegion1(aaSeq, winSize):
+    global HydrophobicityScale
+    aaSeqHydReg = 0
+    mostHydRegIndex = 0
+    
+    for index in range(0,(len(aaSeq) - winSize)):
+        
+        aminoSegment = aaSeq[index:index + winSize]
+        aaSegmentHReg = 0
+        for i in range(0, len(aminoSegment)):
+            aaSegmentHReg = aaSegmentHReg+hydrophobicityScale[aminoSegment[i]]
+        if aaSeqHydReg < aaSegmentHReg:
+            aaSeqHydReg = aaSegmentHReg
+            mostHydRegIndex = index
+            
+    return {'mostHydReg': mostHydRegIndex, 'score': aaSeqHydReg}
+'''
+    
 
 def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     """Takes in a list of amino acid sequences and two numbers representing low and high values for
@@ -75,6 +98,7 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     Returns:
         int: window size
     """
+    
     index = 0
     wholesum = [0 for x in range(highWinSize - lowWinSize + 1)]
     while index <= (highWinSize-lowWinSize):
@@ -89,21 +113,10 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     return bestWinSize
 
 
-def gatherContributions(listOfAASeqs):
-    freqCounts = gatherContributions(listOfAASeqs)
-    probs = calcProbs(freqCounts)
-    entropy = entropy(probs)
-    info = information(entropy, 4)
-    contrDict = []
-    for i in range(0, len(aaSeq)):
-        for j in range(0, len(freqCounts)):
-            contrDict.append(probs[i][j] * info)
-    return contrDict
-
 def gatherContributions(aminoSeqList):
     countsList = HelperFunctions.gatherCounts(aminoSeqList)
         
-    finalDict = [0 for x in range(len(countsList))]
+    listOfDicts = [0 for x in range(len(countsList))]
     index =0
     for oneCountList in countsList:
       #  print("onecount at a time : \n",oneCountList)
@@ -124,8 +137,36 @@ def gatherContributions(aminoSeqList):
             if (probabilityPerCount[key] == value): 
                 probabilityPerCount[key] = value * info
         
-        finalDict[index] = probabilityPerCount
+        listOfDicts[index] = probabilityPerCount
         index = index+1
         
-    return finalDict
+    return listOfDicts
 
+
+def findHydrophobicRegion(listOfDicts, aaSeq):
+    windowSize = len(listOfDicts)
+    contributionValueList = {}
+    for index in range(0,len(aaSeq)-windowSize):
+        partialAASeq = aaSeq[index:index+windowSize]    
+        partialAASeqSum = 0
+        for i in range(0,len(partialAASeq)):
+            contributionValue = listOfDicts[0].get(partialAASeq[i])            
+            partialAASeqSum = partialAASeqSum + contributionValue
+        contributionValueList[index] = {'index': index, 'sum':partialAASeqSum}  #keeping track of aminoSeq used and their information value
+        index = index+1
+    
+    hydrophobicRegionIndex = []
+    
+    i =0
+    for x in range(0, len(contributionValueList)):
+        if x[0]['sum'] > 2 :
+            hydrophobicRegionIndex[i] = x[0]['index']
+            i = i+1
+    
+    return hydrophobicRegionIndex        
+            
+
+    '''
+    needs a checking point. if greater than that add amino seq to reutrning list
+    '''
+#    return contributionValueList
