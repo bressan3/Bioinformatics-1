@@ -47,8 +47,8 @@ def mostHydrophobicRegion(aaSeq, winSize):
     global hydrophobicityScale
     index = 0
     aaSeqHydReg = 0
-    mostHydReg = 0
-
+    mostHydReg = ''
+    aaSeqwin=[]
     while index < len(aaSeq):
         if (len(aaSeq) - index) != winSize - 1:
             aaSeqwin = aaSeq[index:index + winSize]
@@ -61,7 +61,7 @@ def mostHydrophobicRegion(aaSeq, winSize):
             count = count + 1
         if aaSeqHydReg < aaSeqReg:
             aaSeqHydReg = aaSeqReg
-            mostHydReg = index
+            mostHydReg = aaSeqwin
         index = index + 1
 
     return {'mostHydReg': mostHydReg, 'score': aaSeqHydReg}
@@ -103,13 +103,12 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     wholesum = [0 for x in range(highWinSize - lowWinSize + 1)]
     while index <= (highWinSize - lowWinSize):
         tempsum = 0
-        for i in listOfAASeqs:
-            hydrophobicityInfo = mostHydrophobicRegion(i, lowWinSize + index)
+        for aaSeq in listOfAASeqs:
+            hydrophobicityInfo = mostHydrophobicRegion(aaSeq, lowWinSize + index)
             tempsum = tempsum + hydrophobicityInfo['score']
         wholesum[index] = tempsum
         index = index + 1
     bestWinSize = lowWinSize + wholesum.index(max(wholesum))
-    print(bestWinSize)
     return bestWinSize
 
 
