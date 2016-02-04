@@ -114,6 +114,13 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
 
 
 def gatherContributions(aminoSeqList):
+    """ Takes a list of amino acids and returns a list of dictionaries where every entry in the dictionary
+     is the base and the contribution of that base to the information for that position
+    Args:
+        aminoSeqList (string): List of amino acids
+    Returns:
+        Dictionary: List of Dictionaries
+    """
     countsList = HelperFunctions.gatherCounts(aminoSeqList)
         
     listOfDicts = [0 for x in range(len(countsList))]
@@ -143,7 +150,17 @@ def gatherContributions(aminoSeqList):
     return listOfDicts
 
 
-def findHydrophobicRegion(listOfDicts, aaSeq):
+def findHydrophobicRegions(listOfDicts, aaSeq):
+    """ Takes in a list of dictionaries containing the contributions of
+     the base to the information (output from the gatherContributions() function) and an amino acid
+     sequence. Returns a list of strings where every string is a region of the amino
+     acid that had a high match to the model of contributions
+    Args:
+        listOfDicts (Dictionary): List of dictionaries
+        aaSeq (string): Amino acid sequence
+    Returns:
+        String: List of regions
+    """
     windowSize = len(listOfDicts)
     contributionValueList = {}
     for index in range(0,len(aaSeq)-windowSize):
@@ -170,3 +187,4 @@ def findHydrophobicRegion(listOfDicts, aaSeq):
     needs a checking point. if greater than that add amino seq to reutrning list
     '''
 #    return contributionValueList
+
