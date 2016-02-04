@@ -18,24 +18,27 @@ def main():
                 
     bestWinSize = TransmembraneFinder.bestWindowSize(aminoAcidSeqList, 6, 10)
     
-    print("Best window size ---------------------------------------------------",bestWinSize)
+    #print("Best window size ---------------------------------------------------",bestWinSize)
     
     aaSeqSegmentList = ["" for i in aminoAcidSeqList]
     
     for aminoIndex in range(0, len(aminoAcidSeqList)):
-        print("Amino seq ======================================================", aminoAcidSeqList[aminoIndex])
+        #print("Amino seq ======================================================", aminoAcidSeqList[aminoIndex])
         hydrophobic = TransmembraneFinder.mostHydrophobicRegion(aminoAcidSeqList[aminoIndex], bestWinSize)        
         hydrophobicSeq = hydrophobic['mostHydReg']
         aaSeqSegmentList[aminoIndex] = hydrophobicSeq    
     
-    print("Hydrophobic segment of best window size :\n",aaSeqSegmentList)
+    #print("Hydrophobic segment of best window size :\n",aaSeqSegmentList)
     
-    #dictionaryList = TransmembraneFinder.gatherContributions(aminoAcidSeqList)
+    dictionaryList = TransmembraneFinder.gatherContributions(aaSeqSegmentList)
+    #print("\n\n\n\n List of Dictionary : \n",dictionaryList)
+    
     
 
-    #test = 'ATGTTTGGGCCCCCAGCCGAGCAATTGCCTCCCGTATTGCTGGTCGAAATGGGATTCGTGAGTTCCATGCCGGTTCTGGGGCTCGTTATACTCATTTTCACCCAAATCCCCGTAACGGATCTCATGTTTGGTATGGGTCGCCACGTTGATCTGTTTTGA'
-    #newSeq = TransmembraneFinder.findHydrophobicRegion(dictionaryList, test)
-    #print(newSeq)
+    test = 'ATGTTTGGGCCCCCAGCCGAGCAATTGCCTCCCGTATTGCTGGTCGAAATGGGATTCGTGAGTTCCATGCCGGTTCTGGGGCTCGTTATACTCATTTTCACCCAAATCCCCGTAACGGATCTCATGTTTGGTATGGGTCGCCACGTTGATCTGTTTTGA'
+    print("test amino Seq length = ",len(test))
+    newSeq = TransmembraneFinder.findHydrophobicRegions(dictionaryList, test)
+    print("new hydro phobic sequence is ", newSeq)
     
     
 

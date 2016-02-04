@@ -160,7 +160,7 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         String: List of regions
     """
     windowSize = len(listOfDicts)
-    contributionValueList = {}
+    contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
     for index in range(0, len(aaSeq) - windowSize):
         partialAASeq = aaSeq[index:index + windowSize]
         partialAASeqSum = 0
@@ -170,13 +170,17 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         # keeping track of aminoSeq used and their information value
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
         index = index + 1
+    
+    print("\n\n\n\n Contribution value list :\n", contributionValueList)
 
     hydrophobicRegionIndex = []
 
     i = 0
+    print("\n\n\n\n\n")
     for x in range(0, len(contributionValueList)):
-        if x[0]['sum'] > 2:
-            hydrophobicRegionIndex[i] = x[0]['index']
+        print("checking contribution", contributionValueList[x])
+        if contributionValueList[x]['sum'] > 2:
+            hydrophobicRegionIndex[i] = contributionValueList[x]['index']
             i = i + 1
 
     return hydrophobicRegionIndex
