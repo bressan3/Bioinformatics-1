@@ -41,10 +41,14 @@ def main():
     test = 'ATGGCCGCCCCCTGCGAAGGCCTGCCCCCTCCACCACGGCCTGTCCGGCAGGATGCCCTCATCCGCCACAGTGCCCTTCCTGTCGCGGAGTCGAGCGTGAACCTCGAAAAAGTCGTCTTTGCCTTCTTCACGATCCTGGCCTGTACCCTGAACTTCGGGTTCTTTCTGGGCGAGATCGACCGTGCCGACTTCCACCACCCGGCCGAGCTGTTCATCGCCGTGGTCATCAACCTGATCACGCTGATCATCAAGTTCGGCGACCGTACCCAGATGGGCGCCACGCACCTGGCCACCAGCCTGGTGGCGACGCTGCAGCTGCTCTTTGCCTCGCTGGTCTGGATGTGGGTCGAACAGTTCAACAACACCCCGCTGGACGGCCACACGGTCAGCATCATCGTGTCGCTGTCGGGCGGTGCGCTGCTGGCCAACCTGGTCTCGGTCATCCTGCTGATCGGCGAGACGCTGCGCCAGACGCGCTGA'
     print("test amino Seq length = ",len(test))
     aatest = TransmembraneFinder.translate(test)
-    print("aatest = ", aatest);
+    print("aatest = ", aatest)
+    print("aatest length = ", len(aatest))
     newSeq = TransmembraneFinder.findHydrophobicRegions(dictionaryList, aatest)
-    print("new hydro phobic sequence is ", newSeq)
+    print("Hydro phobic sequences are ", newSeq)
     
+    
+    #TransmembraneFinder.constructGraph1(dictionaryList, aatest)
+    TransmembraneFinder.constructGraph(dictionaryList, aatest)
     
 
 main()

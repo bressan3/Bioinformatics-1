@@ -3,7 +3,7 @@ Please read: project_1_transmembrane_regions_2016.pdf for more info.
 """
 from codes import *
 import HelperFunctions
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 
 def readInput(filename):
@@ -159,30 +159,119 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
     Returns:
         String: List of regions
     """
+    
+    cutOffValue = -0.2
+    
     windowSize = len(listOfDicts)
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
     for index in range(0, len(aaSeq) - windowSize):
         partialAASeq = aaSeq[index:index + windowSize]
         partialAASeqSum = 0
         for i in range(0, len(partialAASeq)):
-            contributionValue = listOfDicts[0].get(partialAASeq[i])
+            contributionValue = listOfDicts[i].get(partialAASeq[i])
             partialAASeqSum = partialAASeqSum + contributionValue
         # keeping track of aminoSeq used and their information value
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
-        index = index + 1
+        
     
+   
+        
     hydrophobicRegionIndex = {}
 
     i = 0
     print("\n\n")
     for x in range(0, len(contributionValueList)):
-        #print("checking contribution", contributionValueList[x])
-        if contributionValueList[x]['sum'] > -0.13:
+        #print("checking contribution", contributionValueList[x]['index'], " ====", contributionValueList[x]['sum'])
+        if contributionValueList[x]['sum'] > cutOffValue:
             #print('found 1')
             hydrophobicRegionIndex[i] = contributionValueList[x]['index']
             i = i + 1
 
-    return hydrophobicRegionIndex
+    #print('Unrefined hydrophobic index  ==========', hydrophobicRegionIndex)
+
+    refinedHRIndex = [] #contains start and end index of hydrophobic part alternatingly. for 3 region [start, end, start, end, start, end]
+    refinedHRIndex.append(hydrophobicRegionIndex[0])
+    
+    for index in range(1, len(hydrophobicRegionIndex)):
+        if ((hydrophobicRegionIndex[index -1] + windowSize) > hydrophobicRegionIndex[index]):
+            continue
+        else:
+            refinedHRIndex.append(hydrophobicRegionIndex[index -1] + windowSize)
+            refinedHRIndex.append(hydrophobicRegionIndex[index])
+            
+    
+    #print("Refined index ============ ", refinedHRIndex)
+    
+    hydropgobicRegionList = []
+    index = 1
+    while(index < len(refinedHRIndex)):
+        x = refinedHRIndex[index - 1]
+        y = refinedHRIndex[index]
+        print('X', x)
+        print('Y', y)
+        
+        hydropgobicRegionList.append(aaSeq[x : y])
+        index = index +2
+        
+    #if there is extra start region then gather all amino acid from that region to length of window size    
+    if (len(refinedHRIndex) % 2 != 0):
+        lastx = refinedHRIndex[-1]
+        lasty = lastx + windowSize
+        hydropgobicRegionList.append(aaSeq[lastx : lasty] )        
+    
+    
+    #print("Hydrophobic regions =====================================", hydropgobicRegionList)
+    
+    
+    #return hydropgobicRegionList
+    
+    
+    ret = []    
+    for x in hydrophobicRegionIndex:
+        ret.append(aaSeq[x:x+windowSize])
+    
+    print("ret = ======", ret)
+    return ret
+
+
+
+def constructGraph1(listOfDicts, aaSeq):
+    """ The function should create a graph where the X axis is the position in the
+    amino acid sequence and the Y axis is how well the model matches at that location, graphically
+    representing the same information as on findHydrophobicRegions().
+    Args:
+        listOfDicts (Dictionary): List of dictionaries containing the contributions of
+        the base to the information (output from the gatherContributions() function)
+        aaSeq (string): An amino acid sequence
+    Returns:
+        None: No Return
+    """
+    
+    windowSize = len(listOfDicts)
+    contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
+    for index in range(0, len(aaSeq) - windowSize):
+        partialAASeq = aaSeq[index:index + windowSize]
+        partialAASeqSum = 0
+        for i in range(0, len(partialAASeq)):
+            contributionValue = listOfDicts[i].get(partialAASeq[i])
+            partialAASeqSum = partialAASeqSum + contributionValue
+        # keeping track of aminoSeq used and their information value
+        contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
+        
+        contributionInformation = [0 for x in range(0, len(contributionValueList))]
+            
+    for x in range(0, len(contributionValueList)):
+        print("contribution list issssssssssssssssssssss, ", contributionValueList)
+        contributionInformation[x] = contributionValueList[x]['sum']
+       
+    print("contribution informateion = =====", contributionInformation)
+       
+    plt.xlabel('Position in the amino acid sequence')
+    plt.ylabel('Contribution')
+    plt.plot(range(0, len(aaSeq)), contributionInformation)
+    plt.show()
+
+
 
 
 
@@ -198,14 +287,15 @@ def constructGraph(listOfDicts, aaSeq):
         None: No Return
     """
     hydrophobicRegions = findHydrophobicRegions(listOfDicts, aaSeq)
-    freqCounts = gatherCounts(hydrophobicRegions)
+    freqCounts = HelperFunctions.gatherCounts(hydrophobicRegions)
     probs = []
-    for i in range(i, len(freqCounts)):
-        probs[i] = calcProbs(freqCounts[i])
+    for i in range(0, len(freqCounts)):
+        probs.append(HelperFunctions.calcProbs(freqCounts[i]))
     informations = []
     for i in range(0, len(probs)):
-        informations[i] = information(entropy(probs[i]), len(freqCounts[0]))
+        informations[i] = HelperFunctions.information(HelperFunctions.entropy(probs[i]), len(freqCounts[0]))
     plt.xlabel('Position in the amino acid sequence')
     plt.ylabel('Matches')
-    plt.plot(informations, range(0, len(hydrophobicRegions) - 1))
+    plt.plot(np.array(range(0, len(hydrophobicRegions) - 1)), np.array(informations))
     plt.show()
+
