@@ -3,7 +3,7 @@ Please read: project_1_transmembrane_regions_2016.pdf for more info.
 """
 
 import TransmembraneFinder
-import HelperFunctions
+
 
 
 def main():
@@ -24,43 +24,28 @@ def main():
     
     for aminoIndex in range(0, len(aminoAcidSeqList)):
         #print("Amino seq ======================================================", aminoAcidSeqList[aminoIndex])
+    
         hydrophobic = TransmembraneFinder.mostHydrophobicRegion(aminoAcidSeqList[aminoIndex], bestWinSize)        
+        #print("Hydrophobic region is ==========================================", hydrophobic)
+        
         hydrophobicSeq = hydrophobic['mostHydReg']
         aaSeqSegmentList[aminoIndex] = hydrophobicSeq    
     
     #print("Hydrophobic segment of best window size :\n",aaSeqSegmentList)
     
     dictionaryList = TransmembraneFinder.gatherContributions(aaSeqSegmentList)
-    #print("\n\n\n\n List of Dictionary : \n",dictionaryList)
+    #print("\n\n\n\n List of Dictionary : \n",len(dictionaryList))
     
     
 
-    test = 'ATGTTTGGGCCCCCAGCCGAGCAATTGCCTCCCGTATTGCTGGTCGAAATGGGATTCGTGAGTTCCATGCCGGTTCTGGGGCTCGTTATACTCATTTTCACCCAAATCCCCGTAACGGATCTCATGTTTGGTATGGGTCGCCACGTTGATCTGTTTTGA'
+    test = 'ATGGCCGCCCCCTGCGAAGGCCTGCCCCCTCCACCACGGCCTGTCCGGCAGGATGCCCTCATCCGCCACAGTGCCCTTCCTGTCGCGGAGTCGAGCGTGAACCTCGAAAAAGTCGTCTTTGCCTTCTTCACGATCCTGGCCTGTACCCTGAACTTCGGGTTCTTTCTGGGCGAGATCGACCGTGCCGACTTCCACCACCCGGCCGAGCTGTTCATCGCCGTGGTCATCAACCTGATCACGCTGATCATCAAGTTCGGCGACCGTACCCAGATGGGCGCCACGCACCTGGCCACCAGCCTGGTGGCGACGCTGCAGCTGCTCTTTGCCTCGCTGGTCTGGATGTGGGTCGAACAGTTCAACAACACCCCGCTGGACGGCCACACGGTCAGCATCATCGTGTCGCTGTCGGGCGGTGCGCTGCTGGCCAACCTGGTCTCGGTCATCCTGCTGATCGGCGAGACGCTGCGCCAGACGCGCTGA'
     print("test amino Seq length = ",len(test))
-    newSeq = TransmembraneFinder.findHydrophobicRegions(dictionaryList, test)
+    aatest = TransmembraneFinder.translate(test)
+    print("aatest = ", aatest);
+    newSeq = TransmembraneFinder.findHydrophobicRegions(dictionaryList, aatest)
     print("new hydro phobic sequence is ", newSeq)
     
     
-
-def test():
-    #count = HelperFunctions.gatherCounts(['FLS','LSS','LSY','LSF'])
-    
-    #count = HelperFunctions.gatherCountsDNATest(['ACG','CGG','CGT','CGA'])
-    #print(count)
-    
-    
-    #entropy = HelperFunctions.entropy([0.33,0.14,0.41,0.12])
-    #print(entropy)
-    
-    #info = HelperFunctions.information(entropy,4)
-    #print(info)
-    
-    #contribution = TransmembraneFinder.gatherContributions(['ACGGTCGT', 'CCGTGCGC', 'ACGGACGT', 'GGCCGCAA'])
-    
-    #contribution = TransmembraneFinder.gatherContributions(['FLS','LSS','LSY','LSF'])
-    
-    #print("Contribution = ",contribution)
-    print("nothing")
 
 main()
 

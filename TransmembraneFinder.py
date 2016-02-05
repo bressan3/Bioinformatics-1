@@ -130,13 +130,13 @@ def gatherContributions(aminoSeqList):
         probabilityPerCount = HelperFunctions.calcProbs(oneCountList)
 
         probabilityList = [value for key, value in probabilityPerCount.items()]
-        print("Probability list : \n", probabilityList)
+        #print("Probability list : \n", probabilityList)
 
         entropy = HelperFunctions.entropy(probabilityList)
-        print("Entropy = ", entropy)
+        #print("Entropy = ", entropy)
 
         info = HelperFunctions.information(entropy, 4)
-        print("Information = ", info)
+        #print("Information = ", info)
 
         for key, value in probabilityPerCount.items():
             if (probabilityPerCount[key] == value):
@@ -171,24 +171,19 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
         index = index + 1
     
-    print("\n\n\n\n Contribution value list :\n", contributionValueList)
-
-    hydrophobicRegionIndex = []
+    hydrophobicRegionIndex = {}
 
     i = 0
-    print("\n\n\n\n\n")
+    print("\n\n")
     for x in range(0, len(contributionValueList)):
-        print("checking contribution", contributionValueList[x])
-        if contributionValueList[x]['sum'] > 2:
+        #print("checking contribution", contributionValueList[x])
+        if contributionValueList[x]['sum'] > -0.13:
+            #print('found 1')
             hydrophobicRegionIndex[i] = contributionValueList[x]['index']
             i = i + 1
 
     return hydrophobicRegionIndex
 
-    '''
-    needs a checking point. if greater than that add amino seq to reutrning list
-    '''
-#    return contributionValueList
 
 
 def constructGraph(listOfDicts, aaSeq):
