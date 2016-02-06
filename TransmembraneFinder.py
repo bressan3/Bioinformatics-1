@@ -4,6 +4,7 @@ Please read: project_1_transmembrane_regions_2016.pdf for more info.
 from codes import *
 import HelperFunctions
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def readInput(filename):
@@ -207,9 +208,6 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
     while(index < len(refinedHRIndex)):
         x = refinedHRIndex[index - 1]
         y = refinedHRIndex[index]
-        print('X', x)
-        print('Y', y)
-        
         hydropgobicRegionList.append(aaSeq[x : y])
         index = index +2
         
@@ -223,16 +221,8 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
     #print("Hydrophobic regions =====================================", hydropgobicRegionList)
     
     
-    #return hydropgobicRegionList
+    return hydropgobicRegionList
     
-    
-    ret = []    
-    for x in hydrophobicRegionIndex:
-        ret.append(aaSeq[x:x+windowSize])
-    
-    print("ret = ======", ret)
-    return ret
-
 
 
 def constructGraph1(listOfDicts, aaSeq):
@@ -246,6 +236,8 @@ def constructGraph1(listOfDicts, aaSeq):
     Returns:
         None: No Return
     """
+    
+    cutOffValue = -0.2
     
     windowSize = len(listOfDicts)
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
@@ -261,17 +253,21 @@ def constructGraph1(listOfDicts, aaSeq):
         contributionInformation = [0 for x in range(0, len(contributionValueList))]
             
     for x in range(0, len(contributionValueList)):
-        print("contribution list issssssssssssssssssssss, ", contributionValueList)
-        contributionInformation[x] = contributionValueList[x]['sum']
-       
-    print("contribution informateion = =====", contributionInformation)
+        #contributionInformation[x] = contributionValueList[x]['sum']
+        if contributionValueList[x]['sum'] < cutOffValue : 
+            contributionInformation[x] = 0
+        else:
+            contributionInformation[x] = -cutOffValue - contributionValueList[x]['sum'] 
+        
        
     plt.xlabel('Position in the amino acid sequence')
     plt.ylabel('Contribution')
-    plt.plot(range(0, len(aaSeq)), contributionInformation)
+    xaxis = [x for x in range(0, len(aaSeq) - windowSize)]
+    yaxis = contributionInformation
+
+    
+    plt.plot( xaxis, yaxis)
     plt.show()
-
-
 
 
 

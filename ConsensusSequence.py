@@ -37,7 +37,24 @@ def main():
     #print("\n\n\n\n List of Dictionary : \n",len(dictionaryList))
     
     
-
+    
+    
+    testSeqList = TransmembraneFinder.readInput("Sequences/FinalTestSeqs.txt")    
+    
+    
+    for index in range(0,len(testSeqList)):
+        amino = TransmembraneFinder.translate(testSeqList[index])
+        print("test amino acid = ", amino)
+        newSeq = TransmembraneFinder.findHydrophobicRegions(dictionaryList, amino)
+        print("Hydro phobic sequences are for test data",index, "is :", newSeq)
+        TransmembraneFinder.constructGraph1(dictionaryList, amino)
+    
+    
+        
+    
+    
+    
+'''
     test = 'ATGGCCGCCCCCTGCGAAGGCCTGCCCCCTCCACCACGGCCTGTCCGGCAGGATGCCCTCATCCGCCACAGTGCCCTTCCTGTCGCGGAGTCGAGCGTGAACCTCGAAAAAGTCGTCTTTGCCTTCTTCACGATCCTGGCCTGTACCCTGAACTTCGGGTTCTTTCTGGGCGAGATCGACCGTGCCGACTTCCACCACCCGGCCGAGCTGTTCATCGCCGTGGTCATCAACCTGATCACGCTGATCATCAAGTTCGGCGACCGTACCCAGATGGGCGCCACGCACCTGGCCACCAGCCTGGTGGCGACGCTGCAGCTGCTCTTTGCCTCGCTGGTCTGGATGTGGGTCGAACAGTTCAACAACACCCCGCTGGACGGCCACACGGTCAGCATCATCGTGTCGCTGTCGGGCGGTGCGCTGCTGGCCAACCTGGTCTCGGTCATCCTGCTGATCGGCGAGACGCTGCGCCAGACGCGCTGA'
     print("test amino Seq length = ",len(test))
     aatest = TransmembraneFinder.translate(test)
@@ -47,9 +64,9 @@ def main():
     print("Hydro phobic sequences are ", newSeq)
     
     
-    #TransmembraneFinder.constructGraph1(dictionaryList, aatest)
-    TransmembraneFinder.constructGraph(dictionaryList, aatest)
-    
+    TransmembraneFinder.constructGraph1(dictionaryList, aatest)
+    #TransmembraneFinder.constructGraph(dictionaryList, aatest)
+   ''' 
 
 main()
 
