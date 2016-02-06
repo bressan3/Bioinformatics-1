@@ -4,7 +4,6 @@ Please read: project_1_transmembrane_regions_2016.pdf for more info.
 from codes import *
 import HelperFunctions
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def readInput(filename):
@@ -106,10 +105,11 @@ def gatherContributions(aminoSeqList):
 
     listOfDicts = [0 for x in range(len(countsList))]
     index = 0
+    
     for oneCountList in countsList:
-      
         probabilityPerCount = HelperFunctions.calcProbs(oneCountList)
         probabilityList = [value for key, value in probabilityPerCount.items()]
+        
         entropy = HelperFunctions.entropy(probabilityList)
         info = HelperFunctions.information(entropy, 4)
       
@@ -140,42 +140,47 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
     windowSize = len(listOfDicts)
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
     for index in range(0, len(aaSeq) - windowSize):
+        #taking segment of amino acid
         partialAASeq = aaSeq[index:index + windowSize]
         partialAASeqSum = 0
+        
+        #calculating contribution value of the segment
         for i in range(0, len(partialAASeq)):
             contributionValue = listOfDicts[i].get(partialAASeq[i])
             partialAASeqSum = partialAASeqSum + contributionValue
         
+        #storing start index of segment and its total contribution
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
-        
     
-   
-        
+    #holds index of segments which have higher contribution value than cut off value
     hydrophobicRegionIndex = {}
-
     i = 0
-    print("\n\n")
+
     for x in range(0, len(contributionValueList)):
+        
         if contributionValueList[x]['sum'] > cutOffValue:
             hydrophobicRegionIndex[i] = contributionValueList[x]['index']
             i = i + 1
 
-
-    refinedHRIndex = [] #contains start and end index of hydrophobic part alternatingly. for 3 region [start, end, start, end, start, end]
+    #contains start and end index of hydrophobic part alternatingly. Example: for 3 region [start, end, start, end, start, end]
+    refinedHRIndex = [] 
     refinedHRIndex.append(hydrophobicRegionIndex[0])
     
     for index in range(1, len(hydrophobicRegionIndex)):
+        #if start index of following sequence lies within windowSize range then combine the sequence with previous one
+        #if start index of following sequence is farther than windowSize range then that following index is start index of new hydrophobic sequence
         if ((hydrophobicRegionIndex[index -1] + windowSize) > hydrophobicRegionIndex[index]):
             continue
         else:
             refinedHRIndex.append(hydrophobicRegionIndex[index -1] + windowSize)
             refinedHRIndex.append(hydrophobicRegionIndex[index])
     
+    #holds list of hydrophobic segment region 
     hydropgobicRegionList = []
     index = 1
     while(index < len(refinedHRIndex)):
-        x = refinedHRIndex[index - 1]
-        y = refinedHRIndex[index]
+        x = refinedHRIndex[index - 1]   #start index
+        y = refinedHRIndex[index]       #end index
         hydropgobicRegionList.append(aaSeq[x : y])
         index = index +2
         
@@ -201,25 +206,31 @@ def constructGraph(listOfDicts, aaSeq):
         None: No Return
     """
     
+    
     cutOffValue = -0.2
     windowSize = len(listOfDicts)
     
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
 
     for index in range(0, len(aaSeq) - windowSize):
-        #taking segment 
+        #taking segment of amino acid
         partialAASeq = aaSeq[index:index + windowSize]
         partialAASeqSum = 0
+        
+        #calculating contribution value of the segment
         for i in range(0, len(partialAASeq)):
             contributionValue = listOfDicts[i].get(partialAASeq[i])
             partialAASeqSum = partialAASeqSum + contributionValue
-
+        
+        #storing start index of segment and its total contribution
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
         
-        contributionInformation = [0 for x in range(0, len(contributionValueList))]
-            
+    contributionInformation = [0 for x in range(0, len(contributionValueList))]
+    
+    
     for x in range(0, len(contributionValueList)):
-
+        # Neglecting contribution of segment whose contribution value is less than the cutoff value
+        # Otherwise subtracting it from negative of cutoff value to make it easier to plot along positive y axis
         if contributionValueList[x]['sum'] < cutOffValue : 
             contributionInformation[x] = 0
         else:
