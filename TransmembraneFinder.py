@@ -1,7 +1,5 @@
 """Library containing the needed functions for assignemnt 1 for the Bioinformatics class.
 Please read: project_1_transmembrane_regions_2016.pdf for more info.
-Authors:
-    Suman, Lucas, Stephane, Magadi
 """
 from codes import *
 import HelperFunctions
@@ -153,24 +151,22 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         
         #storing start index of segment and its total contribution
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
-        #print("Index = ",index, "value = ", partialAASeqSum)
     
     #holds index of segments which have higher contribution value than cut off value
     hydrophobicRegionIndex = []
     
-
     for x in range(0, len(contributionValueList)):
         
         if contributionValueList[x]['sum'] > cutOffValue:
             hydrophobicRegionIndex.append(contributionValueList[x]['index'])
 
     if (hydrophobicRegionIndex == []):
-        print("NO hydrophobic region")
-        return "NO hydrophobic Region"
+        print("NO Hdrophobic region")
+        return "No hydrophobic region"
+
 
     #contains start and end index of hydrophobic part alternatingly. Example: for 3 region [start, end, start, end, start, end]
     refinedHRIndex = [] 
-    
     refinedHRIndex.append(hydrophobicRegionIndex[0])
     
     for index in range(1, len(hydrophobicRegionIndex)):

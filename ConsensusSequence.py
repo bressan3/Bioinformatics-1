@@ -1,7 +1,7 @@
-"""File containing function main() for assignemnt 1 for the Bioinformatics class.
+"""Library containing the needed functions for assignemnt 1 for the Bioinformatics class.
 Please read: project_1_transmembrane_regions_2016.pdf for more info.
-Authors:
-    Suman, Lucas, Stephane, Magadi
+
+authors: Suman,Lucas, Stephane, Magadi
 """
 
 import TransmembraneFinder
