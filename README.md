@@ -12,8 +12,5 @@ use this model to predict the transmembrane regions in an unknown protein that m
 # Building it locally
 
  - Clone the repo: ``` $git clone https://github.com/bressan3/Bioinformatics-1.git ```.
- - Run it using your python3 interpreter.
-
-# Contributors
-This repository was originally created and maintained by our Bioinformatics assignment group but anyone is free to
-fork it and try to improve it if they want to.
+ - Make sure you have [Matplotlib](http://matplotlib.org) graphing library installed.
+ - Run it using your python3 interpreter. Ex.: ``` $python3 ConsensusSequence.py ```

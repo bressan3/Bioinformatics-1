@@ -1,5 +1,7 @@
 """Library containing the needed functions for assignemnt 1 for the Bioinformatics class.
-Please read: project_1_transmembrane_regions_2016.pdf for more info.
+    Please read: project_1_transmembrane_regions_2016.pdf for more info.
+Authors:
+    Suman, Lucas, Stephane, Magadi
 """
 from codes import *
 import HelperFunctions
@@ -13,7 +15,7 @@ def readInput(filename):
     Return:
         string: Sequence read from the file
     """
-    
+
     file = [x.strip() for x in open(filename).readlines()]
     return file
 
@@ -49,7 +51,7 @@ def mostHydrophobicRegion(aaSeq, winSize):
     index = 0
     aaSeqHydReg = 0
     mostHydReg = ''
-    aaSeqwin=[]
+    aaSeqwin = []
     while index < len(aaSeq):
         if (len(aaSeq) - index) != winSize - 1:
             aaSeqwin = aaSeq[index:index + winSize]
@@ -85,7 +87,8 @@ def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     while index <= (highWinSize - lowWinSize):
         tempsum = 0
         for aaSeq in listOfAASeqs:
-            hydrophobicityInfo = mostHydrophobicRegion(aaSeq, lowWinSize + index)
+            hydrophobicityInfo = mostHydrophobicRegion(
+                aaSeq, lowWinSize + index)
             tempsum = tempsum + hydrophobicityInfo['score']
         wholesum[index] = tempsum
         index = index + 1
@@ -105,14 +108,14 @@ def gatherContributions(aminoSeqList):
 
     listOfDicts = [0 for x in range(len(countsList))]
     index = 0
-    
+
     for oneCountList in countsList:
         probabilityPerCount = HelperFunctions.calcProbs(oneCountList)
         probabilityList = [value for key, value in probabilityPerCount.items()]
-        
+
         entropy = HelperFunctions.entropy(probabilityList)
         info = HelperFunctions.information(entropy, 4)
-      
+
         for key, value in probabilityPerCount.items():
             if (probabilityPerCount[key] == value):
                 probabilityPerCount[key] = value * info
@@ -134,29 +137,30 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
     Returns:
         String: List of regions
     """
-    
+
     cutOffValue = -0.25
-    
+
     windowSize = len(listOfDicts)
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
     for index in range(0, len(aaSeq) - windowSize):
-        #taking segment of amino acid
+        # taking segment of amino acid
         partialAASeq = aaSeq[index:index + windowSize]
         partialAASeqSum = 0
-        
-        #calculating contribution value of the segment
+
+        # calculating contribution value of the segment
         for i in range(0, len(partialAASeq)):
             contributionValue = listOfDicts[i].get(partialAASeq[i])
             partialAASeqSum = partialAASeqSum + contributionValue
-        
-        #storing start index of segment and its total contribution
+
+        # storing start index of segment and its total contribution
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
-    
-    #holds index of segments which have higher contribution value than cut off value
+
+    # holds index of segments which have higher contribution value than cut
+    # off value
     hydrophobicRegionIndex = []
-    
+
     for x in range(0, len(contributionValueList)):
-        
+
         if contributionValueList[x]['sum'] > cutOffValue:
             hydrophobicRegionIndex.append(contributionValueList[x]['index'])
 
@@ -164,37 +168,39 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         print("NO Hdrophobic region")
         return "No hydrophobic region"
 
-
-    #contains start and end index of hydrophobic part alternatingly. Example: for 3 region [start, end, start, end, start, end]
-    refinedHRIndex = [] 
+    # contains start and end index of hydrophobic part alternatingly. Example:
+    # for 3 region [start, end, start, end, start, end]
+    refinedHRIndex = []
     refinedHRIndex.append(hydrophobicRegionIndex[0])
-    
+
     for index in range(1, len(hydrophobicRegionIndex)):
-        #if start index of following sequence lies within windowSize range then combine the sequence with previous one
-        #if start index of following sequence is farther than windowSize range then that following index is start index of new hydrophobic sequence
-        if ((hydrophobicRegionIndex[index -1] + windowSize) > hydrophobicRegionIndex[index]):
+        # if start index of following sequence lies within windowSize range then combine the sequence with previous one
+        # if start index of following sequence is farther than windowSize range
+        # then that following index is start index of new hydrophobic sequence
+        if ((hydrophobicRegionIndex[index - 1] + windowSize) > hydrophobicRegionIndex[index]):
             continue
         else:
-            refinedHRIndex.append(hydrophobicRegionIndex[index -1] + windowSize)
+            refinedHRIndex.append(
+                hydrophobicRegionIndex[index - 1] + windowSize)
             refinedHRIndex.append(hydrophobicRegionIndex[index])
-    
-    #holds list of hydrophobic segment region 
+
+    # holds list of hydrophobic segment region
     hydropgobicRegionList = []
     index = 1
     while(index < len(refinedHRIndex)):
-        x = refinedHRIndex[index - 1]   #start index
-        y = refinedHRIndex[index]       #end index
-        hydropgobicRegionList.append(aaSeq[x : y])
-        index = index +2
-        
-    #if there is extra start region then gather all amino acid from that region to length of window size    
+        x = refinedHRIndex[index - 1]  # start index
+        y = refinedHRIndex[index]  # end index
+        hydropgobicRegionList.append(aaSeq[x: y])
+        index = index + 2
+
+    # if there is extra start region then gather all amino acid from that
+    # region to length of window size
     if (len(refinedHRIndex) % 2 != 0):
         lastx = refinedHRIndex[-1]
         lasty = lastx + windowSize
-        hydropgobicRegionList.append(aaSeq[lastx : lasty] )        
-    
+        hydropgobicRegionList.append(aaSeq[lastx: lasty])
+
     return hydropgobicRegionList
-    
 
 
 def constructGraph(listOfDicts, aaSeq):
@@ -208,43 +214,41 @@ def constructGraph(listOfDicts, aaSeq):
     Returns:
         None: No Return
     """
-    
-    
+
     cutOffValue = -0.25
     windowSize = len(listOfDicts)
-    
+
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
 
     for index in range(0, len(aaSeq) - windowSize):
-        #taking segment of amino acid
+        # taking segment of amino acid
         partialAASeq = aaSeq[index:index + windowSize]
         partialAASeqSum = 0
-        
-        #calculating contribution value of the segment
+
+        # calculating contribution value of the segment
         for i in range(0, len(partialAASeq)):
             contributionValue = listOfDicts[i].get(partialAASeq[i])
             partialAASeqSum = partialAASeqSum + contributionValue
-        
-        #storing start index of segment and its total contribution
+
+        # storing start index of segment and its total contribution
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
-        
+
     contributionInformation = [0 for x in range(0, len(contributionValueList))]
-    
-    
+
     for x in range(0, len(contributionValueList)):
         # Neglecting contribution of segment whose contribution value is less than the cutoff value
-        # Otherwise subtracting it from negative of cutoff value to make it easier to plot along positive y axis
-        if contributionValueList[x]['sum'] < cutOffValue : 
+        # Otherwise subtracting it from negative of cutoff value to make it
+        # easier to plot along positive y axis
+        if contributionValueList[x]['sum'] < cutOffValue:
             contributionInformation[x] = 0
         else:
-            contributionInformation[x] = -cutOffValue - contributionValueList[x]['sum'] 
-        
-       
+            contributionInformation[
+                x] = -cutOffValue - contributionValueList[x]['sum']
+
     plt.xlabel('Position in the amino acid sequence')
     plt.ylabel('Contribution')
     xaxis = [x for x in range(0, len(aaSeq) - windowSize)]
     yaxis = contributionInformation
 
-    
-    plt.plot( xaxis, yaxis)
+    plt.plot(xaxis, yaxis)
     plt.show()
