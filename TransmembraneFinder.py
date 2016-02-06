@@ -135,7 +135,7 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         String: List of regions
     """
     
-    cutOffValue = -0.2
+    cutOffValue = -0.25
     
     windowSize = len(listOfDicts)
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
@@ -151,19 +151,24 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         
         #storing start index of segment and its total contribution
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
+        #print("Index = ",index, "value = ", partialAASeqSum)
     
     #holds index of segments which have higher contribution value than cut off value
-    hydrophobicRegionIndex = {}
-    i = 0
+    hydrophobicRegionIndex = []
+    
 
     for x in range(0, len(contributionValueList)):
         
         if contributionValueList[x]['sum'] > cutOffValue:
-            hydrophobicRegionIndex[i] = contributionValueList[x]['index']
-            i = i + 1
+            hydrophobicRegionIndex.append(contributionValueList[x]['index'])
+
+    if (hydrophobicRegionIndex == []):
+        print("NO hydrophobic region")
+        return "NO hydrophobic Region"
 
     #contains start and end index of hydrophobic part alternatingly. Example: for 3 region [start, end, start, end, start, end]
     refinedHRIndex = [] 
+    
     refinedHRIndex.append(hydrophobicRegionIndex[0])
     
     for index in range(1, len(hydrophobicRegionIndex)):
@@ -207,7 +212,7 @@ def constructGraph(listOfDicts, aaSeq):
     """
     
     
-    cutOffValue = -0.2
+    cutOffValue = -0.25
     windowSize = len(listOfDicts)
     
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
