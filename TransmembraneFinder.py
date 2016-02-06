@@ -14,6 +14,7 @@ def readInput(filename):
     Return:
         string: Sequence read from the file
     """
+    
     file = [x.strip() for x in open(filename).readlines()]
     return file
 
@@ -68,26 +69,6 @@ def mostHydrophobicRegion(aaSeq, winSize):
     return {'mostHydReg': mostHydReg, 'score': aaSeqHydReg}
 
 
-'''
-def mostHydrophobicRegion1(aaSeq, winSize):
-    global HydrophobicityScale
-    aaSeqHydReg = 0
-    mostHydRegIndex = 0
-    
-    for index in range(0,(len(aaSeq) - winSize)):
-        
-        aminoSegment = aaSeq[index:index + winSize]
-        aaSegmentHReg = 0
-        for i in range(0, len(aminoSegment)):
-            aaSegmentHReg = aaSegmentHReg+hydrophobicityScale[aminoSegment[i]]
-        if aaSeqHydReg < aaSegmentHReg:
-            aaSeqHydReg = aaSegmentHReg
-            mostHydRegIndex = index
-            
-    return {'mostHydReg': mostHydRegIndex, 'score': aaSeqHydReg}
-'''
-
-
 def bestWindowSize(listOfAASeqs, lowWinSize, highWinSize):
     """Takes in a list of amino acid sequences and two numbers representing low and high values for
      possible window sizes. Returns the window size which has the highest total hydrophibcity across
@@ -126,19 +107,12 @@ def gatherContributions(aminoSeqList):
     listOfDicts = [0 for x in range(len(countsList))]
     index = 0
     for oneCountList in countsList:
-      #  print("onecount at a time : \n",oneCountList)
-
+      
         probabilityPerCount = HelperFunctions.calcProbs(oneCountList)
-
         probabilityList = [value for key, value in probabilityPerCount.items()]
-        #print("Probability list : \n", probabilityList)
-
         entropy = HelperFunctions.entropy(probabilityList)
-        #print("Entropy = ", entropy)
-
         info = HelperFunctions.information(entropy, 4)
-        #print("Information = ", info)
-
+      
         for key, value in probabilityPerCount.items():
             if (probabilityPerCount[key] == value):
                 probabilityPerCount[key] = value * info
@@ -171,7 +145,7 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         for i in range(0, len(partialAASeq)):
             contributionValue = listOfDicts[i].get(partialAASeq[i])
             partialAASeqSum = partialAASeqSum + contributionValue
-        # keeping track of aminoSeq used and their information value
+        
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
         
     
@@ -182,13 +156,10 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
     i = 0
     print("\n\n")
     for x in range(0, len(contributionValueList)):
-        #print("checking contribution", contributionValueList[x]['index'], " ====", contributionValueList[x]['sum'])
         if contributionValueList[x]['sum'] > cutOffValue:
-            #print('found 1')
             hydrophobicRegionIndex[i] = contributionValueList[x]['index']
             i = i + 1
 
-    #print('Unrefined hydrophobic index  ==========', hydrophobicRegionIndex)
 
     refinedHRIndex = [] #contains start and end index of hydrophobic part alternatingly. for 3 region [start, end, start, end, start, end]
     refinedHRIndex.append(hydrophobicRegionIndex[0])
@@ -199,9 +170,6 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         else:
             refinedHRIndex.append(hydrophobicRegionIndex[index -1] + windowSize)
             refinedHRIndex.append(hydrophobicRegionIndex[index])
-            
-    
-    #print("Refined index ============ ", refinedHRIndex)
     
     hydropgobicRegionList = []
     index = 1
@@ -217,15 +185,11 @@ def findHydrophobicRegions(listOfDicts, aaSeq):
         lasty = lastx + windowSize
         hydropgobicRegionList.append(aaSeq[lastx : lasty] )        
     
-    
-    #print("Hydrophobic regions =====================================", hydropgobicRegionList)
-    
-    
     return hydropgobicRegionList
     
 
 
-def constructGraph1(listOfDicts, aaSeq):
+def constructGraph(listOfDicts, aaSeq):
     """ The function should create a graph where the X axis is the position in the
     amino acid sequence and the Y axis is how well the model matches at that location, graphically
     representing the same information as on findHydrophobicRegions().
@@ -238,22 +202,24 @@ def constructGraph1(listOfDicts, aaSeq):
     """
     
     cutOffValue = -0.2
-    
     windowSize = len(listOfDicts)
+    
     contributionValueList = [0 for x in range(0, len(aaSeq) - windowSize)]
+
     for index in range(0, len(aaSeq) - windowSize):
+        #taking segment 
         partialAASeq = aaSeq[index:index + windowSize]
         partialAASeqSum = 0
         for i in range(0, len(partialAASeq)):
             contributionValue = listOfDicts[i].get(partialAASeq[i])
             partialAASeqSum = partialAASeqSum + contributionValue
-        # keeping track of aminoSeq used and their information value
+
         contributionValueList[index] = {'index': index, 'sum': partialAASeqSum}
         
         contributionInformation = [0 for x in range(0, len(contributionValueList))]
             
     for x in range(0, len(contributionValueList)):
-        #contributionInformation[x] = contributionValueList[x]['sum']
+
         if contributionValueList[x]['sum'] < cutOffValue : 
             contributionInformation[x] = 0
         else:
@@ -268,30 +234,3 @@ def constructGraph1(listOfDicts, aaSeq):
     
     plt.plot( xaxis, yaxis)
     plt.show()
-
-
-
-def constructGraph(listOfDicts, aaSeq):
-    """ The function should create a graph where the X axis is the position in the
-    amino acid sequence and the Y axis is how well the model matches at that location, graphically
-    representing the same information as on findHydrophobicRegions().
-    Args:
-        listOfDicts (Dictionary): List of dictionaries containing the contributions of
-        the base to the information (output from the gatherContributions() function)
-        aaSeq (string): An amino acid sequence
-    Returns:
-        None: No Return
-    """
-    hydrophobicRegions = findHydrophobicRegions(listOfDicts, aaSeq)
-    freqCounts = HelperFunctions.gatherCounts(hydrophobicRegions)
-    probs = []
-    for i in range(0, len(freqCounts)):
-        probs.append(HelperFunctions.calcProbs(freqCounts[i]))
-    informations = []
-    for i in range(0, len(probs)):
-        informations[i] = HelperFunctions.information(HelperFunctions.entropy(probs[i]), len(freqCounts[0]))
-    plt.xlabel('Position in the amino acid sequence')
-    plt.ylabel('Matches')
-    plt.plot(np.array(range(0, len(hydrophobicRegions) - 1)), np.array(informations))
-    plt.show()
-
